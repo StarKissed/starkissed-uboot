@@ -57,6 +57,10 @@ on boot
 on fs
 	mkdir /factory 0775 radio radio
 	mount_all /fstab.tuna
+	mkdir /realdata/media 0775 system system
+	mkdir /realdata/media/2nd 0775 system system
+	mkdir /realdata/media/2nd/cache 0775 system cache
+	symlink /realdata/media/ /data/media/
 	setprop ro.crypto.fuse_sdcard true
 
 # change permissions for mtd device
