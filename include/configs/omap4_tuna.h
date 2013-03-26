@@ -222,8 +222,8 @@
 	"usbnet_hostaddr=f0:bf:97:e4:e5:ef\0" \
 	"loadaddr=0x82000000\0" \
 	"usbtty=cdc_acm\0" \
-	"kernel_name=/boot/vmlinux.uimg\0" \
-	"script_img/boot/boot.scr.uimg\0" \
+	"kernel_name=/boot/1st.uimg\0" \
+	"script_img/boot/1st.scr.uimg\0" \
 	\
 	"load_boot_script=if ext4load ${devtype} ${devnum}:${script_part} " \
 			"${loadaddr} ${script_img}; then " \
@@ -246,15 +246,14 @@
 	"boot_custom_emmc=echo Booting custom image; " \
 		"tuna_set_led 4; " \
 		"setenv loadaddr 0x81f00000; " \
-		"setenv script_img /media/boot/boot.scr.uimg; " \
-		"setenv kernel_name /media/boot/vmlinux.uimg; " \
-		"setenv script_part 0xc; " \
-		"setenv kernel_part 0xc; " \
-		"setenv rootpart 0xc; " \
+		"setenv script_img /boot/2nd.uimg; " \
+		"setenv kernel_name /boot/2nd.uimg; " \
+		"setenv script_part 0xa; " \
+		"setenv kernel_part 0xa; " \
+		"setenv rootpart 0xa; " \
 		"setenv devnum 0; " \
 		"setenv devtype mmc; " \
-		"setenv bootargs " \
-			"${dev_extras} root=/dev/${devname}${rootpart} rootwait ro ;"\
+		"setenv bootargs " ANDROID_CMDLINE " ;"\
 		"run load_boot_script; " \
 		"run custom_boot\0" \
 	\
