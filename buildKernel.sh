@@ -8,7 +8,8 @@ if cat /etc/issue | grep Ubuntu; then
 
 TOOLCHAIN_PREFIX=~/android/android-toolchain-eabi/bin
 KERNELSPEC=~/android/uboot-tuna
-MKBOOTIMG=$KERNELSPEC/buildImg/linux
+MKBOOTIMG=$KERNELSPEC/buildImg
+CONSTRUCT=linux
 
 cd $KERNELSPEC/mkboot
 
@@ -27,7 +28,8 @@ else
 
 TOOLCHAIN_PREFIX=/Volumes/android/android-toolchain-eabi/bin
 KERNELSPEC=/Volumes/android/uboot-tuna
-MKBOOTIMG=$KERNELSPEC/buildImg/darwin
+MKBOOTIMG=$KERNELSPEC/buildImg
+CONSTRUCT=darwin
 
 fi
 
@@ -41,7 +43,10 @@ make distclean
 make omap4_tuna_config
 make -j8 omap4_tuna
 
-$MKBOOTIMG/./mkbootimg --kernel u-boot.bin --ramdisk /dev/null -o dualBoot/u-boot.img
+$MKBOOTIMG/$CONSTRUCT/./mkbootimg --kernel u-boot.bin --ramdisk /dev/null -o dualBoot/u-boot.img
+
+$MKBOOTIMG/$CONSTRUCT/./mkbootfs $MKBOOTIMG/ramdisk | gzip > $MKBOOTIMG/newramdisk.cpio.gz
+$MKBOOTIMG/$CONSTRUCT/./mkbootimg --cmdline 'no_console_suspend=1' --kernel $MKBOOTIMG/zImage --ramdisk $MKBOOTIMG/newramdisk.cpio.gz -o dualBoot/system/boot/2nd.uimg
 
 cd dualBoot
 rm *.zip

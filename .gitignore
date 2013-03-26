@@ -79,4 +79,5 @@ cscope.*
 # spl ais files
 /spl/*.ais
 
+*.cpio.gz
 *.zip
