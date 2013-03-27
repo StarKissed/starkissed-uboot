@@ -63,10 +63,10 @@ make -j$CPU_JOB_NUM omap4_tuna
 $MKBOOTIMG/$BUILDSTRUCT/./mkbootimg --kernel u-boot.bin --ramdisk /dev/null -o dualBoot/u-boot.img
 
 $MKBOOTIMG/$BUILDSTRUCT/./mkbootfs $MKBOOTIMG/kernels/$PRIMARY/ramdisk | gzip > $MKBOOTIMG/kernels/$PRIMARY/newramdisk.cpio.gz
-$MKBOOTIMG/$BUILDSTRUCT/./mkbootimg --cmdline 'no_console_suspend=1 console=null' --kernel $MKBOOTIMG/kernels/$PRIMARY/zImage --ramdisk $MKBOOTIMG/kernels/$PRIMARY/newramdisk.cpio.gz -o dualBoot/system/boot/1st.uimg
+$MKBOOTIMG/$BUILDSTRUCT/./mkbootimg --cmdline 'no_console_suspend=1' --kernel $MKBOOTIMG/kernels/$PRIMARY/zImage --ramdisk $MKBOOTIMG/kernels/$PRIMARY/newramdisk.cpio.gz -o dualBoot/system/boot/1st.uimg
 
 $MKBOOTIMG/$BUILDSTRUCT/./mkbootfs $MKBOOTIMG/kernels/$SECONDARY/ramdisk | gzip > $MKBOOTIMG/kernels/$SECONDARY/newramdisk.cpio.gz
-$MKBOOTIMG/$BUILDSTRUCT/./mkbootimg --cmdline 'no_console_suspend=1 console=null' --kernel $MKBOOTIMG/kernels/$SECONDARY/zImage --ramdisk $MKBOOTIMG/kernels/$SECONDARY/newramdisk.cpio.gz -o dualBoot/system/boot/2nd.uimg
+$MKBOOTIMG/$BUILDSTRUCT/./mkbootimg --cmdline 'no_console_suspend=1' --kernel $MKBOOTIMG/kernels/$SECONDARY/zImage --ramdisk $MKBOOTIMG/kernels/$SECONDARY/newramdisk.cpio.gz -o dualBoot/system/boot/2nd.uimg
 
 cd dualBoot
 rm *.zip
