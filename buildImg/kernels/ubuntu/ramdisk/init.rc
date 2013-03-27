@@ -55,6 +55,7 @@ loglevel 3
     mkdir /acct/uid
 
     mkdir /system
+    mkdir /data 0771 system system
     mkdir /1stdata 0771 system system
     mkdir /config 0500 root root
 
@@ -471,12 +472,12 @@ service media /system/bin/mediaserver
     group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc qcom_diag
     ioprio rt 4
 
-#service bootanim /system/bin/bootanimation
-#    class main
-#    user graphics
-#    group graphics
-#    disabled
-#    oneshot
+service bootanim /system/bin/bootanimation
+    class main
+    user graphics
+    group graphics
+    disabled
+    oneshot
 
 service installd /system/bin/installd
     class main

@@ -6,13 +6,10 @@
 
 if cat /etc/issue | grep Ubuntu; then
 
+HANDLE=twistedumbrella
 TOOLCHAIN_PREFIX=~/android/android-toolchain-eabi/bin
 KERNELSPEC=~/android/uboot-tuna
-MKBOOTIMG=$KERNELSPEC/buildImg
 BUILDSTRUCT=linux
-PRIMARY=default
-SECONDARY=ubuntu
-ZIPNAME="StarKissed_uBoot-4.2.X_Ubuntu.zip"
 ANDROIDREPO=~/Dropbox/TwistedServer/Playground
 
 cd $KERNELSPEC/mkboot
@@ -30,18 +27,22 @@ cp -R mkbootimg $MKBOOTIMG
 
 else
 
+HANDLE=TwistedZero
 TOOLCHAIN_PREFIX=/Volumes/android/android-toolchain-eabi/bin
 KERNELSPEC=/Volumes/android/uboot-tuna
-MKBOOTIMG=$KERNELSPEC/buildImg
 BUILDSTRUCT=darwin
-PRIMARY=default
-SECONDARY=ubuntu
 PUNCHCARD=`date "+%m-%d-%Y_%H.%M"`
-ZIPNAME="StarKissed-JB42X_$PUNCHCARD-uBoot[Ubuntu].zip"
 ANDROIDREPO=/Users/TwistedZero/Public/Dropbox/TwistedServer/Playground
 
 fi
 
+PRIMARY=default
+SECONDARY=ubuntu
+
+zipfile=$HANDLE"_StarKissed-JB42X-uBoot.zip"
+KENRELZIP="StarKissed-JB42X_$PUNCHCARD-uBoot.zip"
+
+MKBOOTIMG=$KERNELSPEC/buildImg
 KERNELREPO=$ANDROIDREPO/kernels
 GOOSERVER=loungekatt@upload.goo.im:public_html
 
@@ -69,11 +70,11 @@ $MKBOOTIMG/$BUILDSTRUCT/./mkbootimg --cmdline 'no_console_suspend=1 console=null
 
 cd dualBoot
 rm *.zip
-zip -r $ZIPNAME *
-cp -R $KERNELSPEC/dualBoot/$ZIPNAME $KERNELREPO/$ZIPNAME
+zip -r $zipfile *
+cp -R $KERNELSPEC/dualBoot/$zipfile $KERNELREPO/$zipfile
 
-if [ -e $KERNELREPO/$ZIPNAME ]; then
-cp -R $KERNELREPO/$ZIPNAME $KERNELREPO/gooserver/$ZIPNAME
-scp -P 2222 $KERNELREPO/gooserver/$ZIPNAME  $GOOSERVER/starkissed
+if [ -e $KERNELREPO/$zipfile ]; then
+cp -R $KERNELREPO/$zipfile $KERNELREPO/gooserver/$KENRELZIP
+scp -P 2222 $KERNELREPO/gooserver/$KENRELZIP  $GOOSERVER/starkissed
 rm -r $KERNELREPO/gooserver/*
 fi
