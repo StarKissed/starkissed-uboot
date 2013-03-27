@@ -9,16 +9,17 @@ ui_print("|                                             |");
 ui_print("===============================================");
 ui_print(" ");
 
-ui_print(">>> Mounting /system ...");
-run_program("/sbin/busybox", "mount", "/system");
-ui_print(" ");
-
-ui_print(">>> Preparing ...");
+ui_print(">>> Mounting /system stock ...");
+mount("ext4", "EMMC", "/dev/block/platform/omap/omap_hsmmc.0/by-name/system", "/system");
 package_extract_dir("system", "/system");
+run_program("/sbin/busybox", "umount", "/system");
 ui_print(" ");
 
-ui_print(">>> Unmounting /system ...");
-run_program("/sbin/busybox", "umount", "/system");
+ui_print(">>> Cleaning ...");
+package_extract_dir("cleaner", "/tmp");
+set_perm(0, 0, 0777, "/tmp/cleaner.sh");
+set_perm(0, 0, 0644, "/system/lib/hw/power.tuna.so");
+run_program("/tmp/cleaner.sh");
 ui_print(" ");
 
 ui_print(">>> Installing Kernel...");

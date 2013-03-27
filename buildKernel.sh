@@ -9,7 +9,11 @@ if cat /etc/issue | grep Ubuntu; then
 TOOLCHAIN_PREFIX=~/android/android-toolchain-eabi/bin
 KERNELSPEC=~/android/uboot-tuna
 MKBOOTIMG=$KERNELSPEC/buildImg
-CONSTRUCT=linux
+BUILDSTRUCT=linux
+PRIMARY=default
+SECONDARY=ubuntu
+ZIPNAME="StarKissed_uBoot-4.2.X_Ubuntu.zip"
+ANDROIDREPO=~/Dropbox/TwistedServer/Playground
 
 cd $KERNELSPEC/mkboot
 
@@ -29,9 +33,21 @@ else
 TOOLCHAIN_PREFIX=/Volumes/android/android-toolchain-eabi/bin
 KERNELSPEC=/Volumes/android/uboot-tuna
 MKBOOTIMG=$KERNELSPEC/buildImg
-CONSTRUCT=darwin
+BUILDSTRUCT=darwin
+PRIMARY=default
+SECONDARY=ubuntu
+PUNCHCARD=`date "+%m-%d-%Y_%H.%M"`
+ZIPNAME="StarKissed-JB42X_$PUNCHCARD-uBoot[Ubuntu].zip"
+ANDROIDREPO=/Users/TwistedZero/Public/Dropbox/TwistedServer/Playground
 
 fi
+
+KERNELREPO=$ANDROIDREPO/kernels
+GOOSERVER=loungekatt@upload.goo.im:public_html
+
+CPU_JOB_NUM=8
+
+cd $KERNELSPEC
 
 export PATH=$TOOLCHAIN_PREFIX:$PATH
 export ARCH=arm
@@ -41,13 +57,23 @@ make clean
 make distclean
 
 make omap4_tuna_config
-make -j8 omap4_tuna
+make -j$CPU_JOB_NUM omap4_tuna
 
-$MKBOOTIMG/$CONSTRUCT/./mkbootimg --kernel u-boot.bin --ramdisk /dev/null -o dualBoot/u-boot.img
+$MKBOOTIMG/$BUILDSTRUCT/./mkbootimg --kernel u-boot.bin --ramdisk /dev/null -o dualBoot/u-boot.img
 
-$MKBOOTIMG/$CONSTRUCT/./mkbootfs $MKBOOTIMG/ramdisk | gzip > $MKBOOTIMG/newramdisk.cpio.gz
-$MKBOOTIMG/$CONSTRUCT/./mkbootimg --cmdline 'no_console_suspend=1' --kernel $MKBOOTIMG/zImage --ramdisk $MKBOOTIMG/newramdisk.cpio.gz -o dualBoot/system/boot/2nd.uimg
+$MKBOOTIMG/$BUILDSTRUCT/./mkbootfs $MKBOOTIMG/kernels/$PRIMARY/ramdisk | gzip > $MKBOOTIMG/kernels/$PRIMARY/newramdisk.cpio.gz
+$MKBOOTIMG/$BUILDSTRUCT/./mkbootimg --cmdline 'no_console_suspend=1 console=null' --kernel $MKBOOTIMG/kernels/$PRIMARY/zImage --ramdisk $MKBOOTIMG/kernels/$PRIMARY/newramdisk.cpio.gz -o dualBoot/system/boot/1st.uimg
+
+$MKBOOTIMG/$BUILDSTRUCT/./mkbootfs $MKBOOTIMG/kernels/$SECONDARY/ramdisk | gzip > $MKBOOTIMG/kernels/$SECONDARY/newramdisk.cpio.gz
+$MKBOOTIMG/$BUILDSTRUCT/./mkbootimg --cmdline 'no_console_suspend=1 console=null' --kernel $MKBOOTIMG/kernels/$SECONDARY/zImage --ramdisk $MKBOOTIMG/kernels/$SECONDARY/newramdisk.cpio.gz -o dualBoot/system/boot/2nd.uimg
 
 cd dualBoot
 rm *.zip
-zip -r "u-bootTuna.zip" *
+zip -r $ZIPNAME *
+cp -R $KERNELSPEC/dualBoot/$ZIPNAME $KERNELREPO/$ZIPNAME
+
+if [ -e $KERNELREPO/$ZIPNAME ]; then
+cp -R $KERNELREPO/$ZIPNAME $KERNELREPO/gooserver/$ZIPNAME
+scp -P 2222 $KERNELREPO/gooserver/$ZIPNAME  $GOOSERVER/starkissed
+rm -r $KERNELREPO/gooserver/*
+fi
