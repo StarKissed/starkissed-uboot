@@ -248,9 +248,9 @@
 		"setenv loadaddr 0x81f00000; " \
 		"setenv script_img /boot/2nd.uimg; " \
 		"setenv kernel_name /boot/2nd.uimg; " \
-		"setenv script_part 0xa; " \
-		"setenv kernel_part 0xa; " \
-		"setenv rootpart 0xa; " \
+		"setenv script_part 0xc; " \
+		"setenv kernel_part 0xc; " \
+		"setenv rootpart 0xc; " \
 		"setenv devnum 0; " \
 		"setenv devtype mmc; " \
 		"setenv bootargs " ANDROID_CMDLINE " ;"\
@@ -260,7 +260,7 @@
 	"boot_system=echo Booting SYSTEM; "\
 		"tuna_set_led 6; " \
 		"setenv bootargs " ANDROID_CMDLINE " ; " \
-		"setenv kernel_part 0xa; " \
+		"setenv kernel_part 0xc; " \
 		"setenv devnum 0; " \
 		"setenv devtype mmc; " \
 		"run custom_boot\0" \
