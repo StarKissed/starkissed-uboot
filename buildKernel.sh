@@ -36,15 +36,8 @@ ANDROIDREPO=/Users/TwistedZero/Public/Dropbox/TwistedServer/Playground
 
 fi
 
-PRIMARY=current
-SECONDARY=legacy
-UBOOTDROP=dualBoot/data/boot
-
-zipfile=$HANDLE"_StarKissed-JB42X-uBoot.zip"
-KENRELZIP="StarKissed-JB42X_$PUNCHCARD-uBoot.zip"
-
 MKBOOTIMG=$KERNELSPEC/buildImg
-KERNELREPO=$ANDROIDREPO/kernels
+
 GOOSERVER=loungekatt@upload.goo.im:public_html
 
 CPU_JOB_NUM=8
@@ -61,21 +54,9 @@ make distclean
 make omap4_tuna_config
 make -j$CPU_JOB_NUM omap4_tuna
 
-$MKBOOTIMG/$BUILDSTRUCT/./mkbootimg --kernel u-boot.bin --ramdisk /dev/null -o dualBoot/u-boot.img
+$MKBOOTIMG/$BUILDSTRUCT/./mkbootimg --kernel u-boot.bin --ramdisk /dev/null -o $MKBOOTIMG/u-boot.img
 
-$MKBOOTIMG/$BUILDSTRUCT/./mkbootfs $MKBOOTIMG/kernels/$PRIMARY/ramdisk | gzip > $MKBOOTIMG/kernels/$PRIMARY/newramdisk.cpio.gz
-$MKBOOTIMG/$BUILDSTRUCT/./mkbootimg --cmdline 'no_console_suspend=1' --kernel $MKBOOTIMG/kernels/$PRIMARY/zImage --ramdisk $MKBOOTIMG/kernels/$PRIMARY/newramdisk.cpio.gz -o $UBOOTDROP/$PRIMARY.uimg
-
-$MKBOOTIMG/$BUILDSTRUCT/./mkbootfs $MKBOOTIMG/kernels/$SECONDARY/ramdisk | gzip > $MKBOOTIMG/kernels/$SECONDARY/newramdisk.cpio.gz
-$MKBOOTIMG/$BUILDSTRUCT/./mkbootimg --cmdline 'no_console_suspend=1' --kernel $MKBOOTIMG/kernels/$SECONDARY/zImage --ramdisk $MKBOOTIMG/kernels/$SECONDARY/newramdisk.cpio.gz -o $UBOOTDROP/$SECONDARY.uimg
-
-cd dualBoot
-rm *.zip
-zip -r $zipfile *
-cp -R $KERNELSPEC/dualBoot/$zipfile $KERNELREPO/$zipfile
-
-if [ -e $KERNELREPO/$zipfile ]; then
-cp -R $KERNELREPO/$zipfile $KERNELREPO/gooserver/$KENRELZIP
-scp -P 2222 $KERNELREPO/gooserver/$KENRELZIP  $GOOSERVER/starkissed
-rm -r $KERNELREPO/gooserver/*
+if [ -e $MKBOOTIMG/u-boot.img ]; then
+scp -P 2222 $MKBOOTIMG/u-boot.img  $GOOSERVER/uBootRepo
+rm -r $MKBOOTIMG/u-boot.img
 fi
