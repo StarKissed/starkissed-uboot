@@ -191,13 +191,11 @@
 #define CONFIG_ANDROID_FORCE_KERNEL_ADDR 0x82808000
 #define CONFIG_ANDROID_FORCE_INITRD_ADDR 0x82000000
 
-#define ANDROID_CMDLINE " console=ttyS0,115200" \
-	" androidboot.console=ttyS0" \
-	" fbcon=rotate:0" \
-	" mem=1G vmalloc=768M" \
-	" omap_wdt.timer_margin=60" \
-	" mms_ts.panel_id=18" \
-	" no_console_suspend=1"
+#define ANDROID_CMDLINE " mem=1G vmalloc=768M" \
+    " omap_wdt.timer_margin=30" \
+    " mms_ts.panel_id=18" \
+    " no_console_suspend" \
+    " console=ttyFIQ0 "
 
 /* mmc partitions
  * 7 -> boot 0x14000 0x4000
@@ -262,7 +260,7 @@
 	"boot_system=echo Booting SYSTEM; "\
 		"tuna_set_led 6; " \
 		"setenv bootargs " ANDROID_CMDLINE " ; " \
-		"setenv kernel_part 0xc; " \
+		"setenv kernel_part 0xa; " \
 		"setenv devnum 0; " \
 		"setenv devtype mmc; " \
 		"run custom_boot\0" \

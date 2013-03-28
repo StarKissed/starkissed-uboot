@@ -59,11 +59,10 @@ on fs
 	mkdir /uboot/media/3rd/system 0775 system system
 	mkdir /uboot/media/3rd/data 0775 system system
 	mkdir /uboot/media/3rd/cache 0775 system cache
-	exec /sbin/busybox mount --bind /uboot/media/3rd/system /system
-	exec /sbin/busybox mount --bind /uboot/media/3rd/data /data
-	exec /sbin/busybox mount --bind /uboot/media/3rd/cache /cache
+	exec /sbin/bb/busybox mount --bind /uboot/media/3rd/system /system
+	exec /sbin/bb/busybox mount --bind /uboot/media/3rd/data /data
+	exec /sbin/bb/busybox mount --bind /uboot/media/3rd/cache /cache
 	symlink /uboot/media/0/ /data/media/0/uboot
-	symlink /uboot/boot/ /data/boot
 
 	setprop ro.crypto.fuse_sdcard true
 
