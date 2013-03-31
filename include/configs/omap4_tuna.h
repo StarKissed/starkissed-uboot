@@ -191,11 +191,13 @@
 #define CONFIG_ANDROID_FORCE_KERNEL_ADDR 0x82808000
 #define CONFIG_ANDROID_FORCE_INITRD_ADDR 0x82000000
 
-#define ANDROID_CMDLINE " mem=1G vmalloc=768M" \
+#define ANDROID_CMDLINE " console=ttyS0,115200" \
+    " androidboot.console=ttyS0" \
+    " fbcon=rotate:0" \
+    " mem=1G" \
+    " vmalloc=768M" \
     " omap_wdt.timer_margin=30" \
-    " mms_ts.panel_id=18" \
-    " no_console_suspend" \
-    " console=ttyFIQ0 "
+    " no_console_suspend=1 "
 
 /* mmc partitions
  * 7 -> boot 0x14000 0x4000
@@ -222,8 +224,8 @@
 	"usbnet_hostaddr=f0:bf:97:e4:e5:ef\0" \
 	"loadaddr=0x82000000\0" \
 	"usbtty=cdc_acm\0" \
-	"kernel_name=/boot/1st.uimg\0" \
-	"script_img/boot/1st.scr.uimg\0" \
+	"kernel_name=/uboot/internal.uimg\0" \
+	"script_img/uboot/internal.scr.uimg\0" \
 	\
 	"load_boot_script=if ext4load ${devtype} ${devnum}:${script_part} " \
 			"${loadaddr} ${script_img}; then " \
@@ -246,8 +248,8 @@
 	"boot_custom_emmc=echo Booting custom image; " \
 		"tuna_set_led 4; " \
 		"setenv loadaddr 0x81f00000; " \
-		"setenv script_img /boot/2nd.uimg; " \
-		"setenv kernel_name /boot/2nd.uimg; " \
+		"setenv script_img /uboot/external.uimg; " \
+		"setenv kernel_name /uboot/external.uimg; " \
 		"setenv script_part 0xc; " \
 		"setenv kernel_part 0xc; " \
 		"setenv rootpart 0xc; " \
