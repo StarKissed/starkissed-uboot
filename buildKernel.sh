@@ -56,6 +56,10 @@ make -j$CPU_JOB_NUM omap4_tuna
 
 $MKBOOTIMG/$BUILDSTRUCT/./mkbootimg --kernel u-boot.bin --ramdisk /dev/null -o $MKBOOTIMG/u-boot.img
 
+tools/./mkimage -A arm -O linux -T script -C none -a 0x84000000 -e 0x84000000 -n android -d bootscripts/external.src bootscripts/external.src.uimg
+
+tools/./mkimage -A arm -O linux -T script -C none -a 0x84000000 -e 0x84000000 -n android -d bootscripts/internal.src bootscripts/internal.src.uimg
+
 if [ -e $MKBOOTIMG/u-boot.img ]; then
 scp -P 2222 $MKBOOTIMG/u-boot.img  $GOOSERVER/uBootRepo
 rm -r $MKBOOTIMG/u-boot.img
