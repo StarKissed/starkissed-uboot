@@ -197,7 +197,8 @@
     " mem=1G" \
     " vmalloc=768M" \
     " omap_wdt.timer_margin=30" \
-    " no_console_suspend=1 "
+    " no_console_suspend=1" \
+    " mms_ts.panel_id=18 "
 
 /* mmc partitions
  * 7 -> boot 0x14000 0x4000
