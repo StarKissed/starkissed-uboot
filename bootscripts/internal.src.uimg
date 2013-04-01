@@ -1,0 +1,18 @@
+setenv bootargs "console=ttyS0,115200 androidboot.console=ttyS0 fbcon=rotate:0 mem=1G vmalloc=768M omap_wdt.timer_margin=30 no_console_suspend=1 mms_ts.panel_id=18";
+setenv loaddaddr 0x82000000;
+setenv devtype mmc;
+setenv devnum 0;
+setenv kernel_part 0xc;
+setenv kernel_name /uboot/internal.uimg;
+
+echo Load Address: ${loaddaddr};
+echo cmdline:${bootargs};
+if ext4load ${devtype} ${devnum}:${kernel_part} ${loaddaddr} ${kernel_name}; then
+	bootm ${loaddaddr};
+	exit 0;
+elif ext2load ${devtype} ${devnum}:${kernel_part} ${loaddaddr} ${kernel_name}; then
+	bootm ${loaddaddr};
+	exit 0;
+else
+	echo failed to boot custom image;
+fi
