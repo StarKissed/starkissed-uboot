@@ -225,7 +225,7 @@
 	"usbnet_hostaddr=f0:bf:97:e4:e5:ef\0" \
 	"loadaddr=0x82000000\0" \
 	"usbtty=cdc_acm\0" \
-	"kernel_name=/uboot/internal.uimg\0" \
+	"kernel_name=/uboot/internal.img\0" \
 	"script_img/uboot/internal.scr.uimg\0" \
 	\
 	"load_boot_script=if ext4load ${devtype} ${devnum}:${script_part} " \
@@ -249,8 +249,8 @@
 	"boot_custom_emmc=echo Booting custom image; " \
 		"tuna_set_led 4; " \
 		"setenv loadaddr 0x81f00000; " \
-		"setenv script_img /uboot/external.uimg; " \
-		"setenv kernel_name /uboot/external.uimg; " \
+		"setenv script_img /uboot/external.scr.uimg; " \
+		"setenv kernel_name /uboot/external.img; " \
 		"setenv script_part 0xc; " \
 		"setenv kernel_part 0xc; " \
 		"setenv rootpart 0xc; " \

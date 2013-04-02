@@ -37,7 +37,8 @@ ANDROIDREPO=/Users/TwistedZero/Public/Dropbox/TwistedServer/Playground
 fi
 
 MKBOOTIMG=$KERNELSPEC/buildImg
-
+BOOTSCRPT=$KERNELSPEC/bootscripts
+KERNELREPO=$ANDROIDREPO/kernels
 GOOSERVER=loungekatt@upload.goo.im:public_html
 
 CPU_JOB_NUM=8
@@ -56,11 +57,14 @@ make -j$CPU_JOB_NUM omap4_tuna
 
 $MKBOOTIMG/$BUILDSTRUCT/./mkbootimg --kernel u-boot.bin --ramdisk /dev/null -o $MKBOOTIMG/u-boot.img
 
-tools/./mkimage -A arm -O linux -T script -C none -a 0x84000000 -e 0x84000000 -n android -d bootscripts/external.src bootscripts/external.src.uimg
+tools/./mkimage -A arm -O linux -T script -C none -a 0x84000000 -e 0x84000000 -n android -d $BOOTSCRPT/internal.src $BOOTSCRPT/internal.src.uimg
 
-tools/./mkimage -A arm -O linux -T script -C none -a 0x84000000 -e 0x84000000 -n android -d bootscripts/internal.src bootscripts/internal.src.uimg
+tools/./mkimage -A arm -O linux -T script -C none -a 0x84000000 -e 0x84000000 -n android -d $BOOTSCRPT/external.src $BOOTSCRPT/external.src.uimg
 
 if [ -e $MKBOOTIMG/u-boot.img ]; then
+cp -R $MKBOOTIMG/u-boot.img $KERNELREPO/images/u-boot.img
+cp -R $BOOTSCRPT/internal.src.uimg $KERNELREPO/images/internal.src.uimg
+cp -R $BOOTSCRPT/external.src.uimg $KERNELREPO/images/external.src.uimg
 scp -P 2222 $MKBOOTIMG/u-boot.img  $GOOSERVER/uBootRepo
 rm -r $MKBOOTIMG/u-boot.img
 fi

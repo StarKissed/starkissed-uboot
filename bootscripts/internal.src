@@ -3,7 +3,7 @@ setenv loaddaddr 0x82000000;
 setenv devtype mmc;
 setenv devnum 0;
 setenv kernel_part 0xc;
-setenv kernel_name /uboot/internal.uimg;
+setenv kernel_name /uboot/internal.img;
 
 echo Load Address: ${loaddaddr};
 echo cmdline:${bootargs};
