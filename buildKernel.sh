@@ -41,6 +41,10 @@ BOOTSCRPT=$KERNELSPEC/bootscripts
 KERNELREPO=$ANDROIDREPO/kernels
 GOOSERVER=loungekatt@upload.goo.im:public_html
 
+zipfile=$HANDLE"_StarKissed-JB42X-uBoot.zip"
+KENRELZIP="StarKissed-JBXXX_$PUNCHCARD-uBoot.zip"
+KERNELDIR="dualBoot"
+
 CPU_JOB_NUM=8
 
 cd $KERNELSPEC
@@ -61,10 +65,20 @@ tools/./mkimage -A arm -O linux -T script -C none -a 0x84000000 -e 0x84000000 -n
 
 tools/./mkimage -A arm -O linux -T script -C none -a 0x84000000 -e 0x84000000 -n android -d $BOOTSCRPT/external.src $BOOTSCRPT/external.src.uimg
 
+cd $KERNELDIR
+rm *.zip
+zip -r $zipfile *
+cd ../
+cp -R $KERNELSPEC/$KERNELDIR/$zipfile $KERNELREPO/$zipfile
+
 if [ -e $MKBOOTIMG/u-boot.img ]; then
 cp -R $MKBOOTIMG/u-boot.img $KERNELREPO/images/u-boot.img
+scp -P 2222 $MKBOOTIMG/u-boot.img $GOOSERVER/uBootRepo
 cp -R $BOOTSCRPT/internal.src.uimg $KERNELREPO/images/internal.src.uimg
+scp -P 2222 $MKBOOTIMG/internal.src.uimg $GOOSERVER/uBootRepo
 cp -R $BOOTSCRPT/external.src.uimg $KERNELREPO/images/external.src.uimg
-scp -P 2222 $MKBOOTIMG/u-boot.img  $GOOSERVER/uBootRepo
-rm -r $MKBOOTIMG/u-boot.img
+scp -P 2222 $MKBOOTIMG/external.src.uimg $GOOSERVER/uBootRepo
+cp -R $KERNELREPO/$zipfile $KERNELREPO/gooserver/$KENRELZIP
+scp -P 2222 $KERNELREPO/gooserver/$KENRELZIP  $GOOSERVER/starkissed
+rm -r $KERNELREPO/gooserver/*
 fi

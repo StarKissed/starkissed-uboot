@@ -263,7 +263,7 @@
 	"boot_system=echo Booting SYSTEM; "\
 		"tuna_set_led 6; " \
 		"setenv bootargs " ANDROID_CMDLINE " ; " \
-		"setenv kernel_part 0xa; " \
+		"setenv kernel_part 0xc; " \
 		"setenv devnum 0; " \
 		"setenv devtype mmc; " \
 		"run custom_boot\0" \

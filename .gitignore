@@ -81,3 +81,5 @@ cscope.*
 
 *.cpio.gz
 *.zip
+
+*.img

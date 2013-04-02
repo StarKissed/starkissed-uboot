@@ -1,0 +1,17 @@
+ui_print(" ");
+ui_print("===============================================");
+ui_print("|                                             |");
+ui_print("|        Galaxy Nexus StarKissed Kernel       |");
+ui_print("|              for uBoot Loader               |");
+ui_print("|         sourced from r_data, franco         |");
+ui_print("|         imoseyon, & twistedumbrella         |");
+ui_print("|                                             |");
+ui_print("===============================================");
+ui_print(" ");
+
+ui_print(">>> Installing Kernel...");
+package_extract_file("u-boot.img", "/dev/block/platform/omap/omap_hsmmc.0/by-name/boot");
+ui_print(" ");
+
+ui_print(">>> Done!");
+ui_print(" ");
