@@ -193,7 +193,7 @@
 
 #define ANDROID_CMDLINE " console=ttyS0,115200" \
     " androidboot.console=ttyS0" \
-    " fbcon=rotate:0" \
+    " fbcon=map:0" \
     " mem=1G" \
     " vmalloc=768M" \
     " omap_wdt.timer_margin=30" \

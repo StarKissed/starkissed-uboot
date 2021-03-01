@@ -10,7 +10,10 @@ ui_print("===============================================");
 ui_print(" ");
 
 ui_print(">>> Installing Kernel...");
-package_extract_file("u-boot.img", "/dev/block/platform/omap/omap_hsmmc.0/by-name/boot");
+package_extract_file("u-boot.img", "/tmp/boot.img");
+set_perm(0, 0, 0777, "/tmp/boot.img");
+run_program("/sbin/busybox", "dd", "if=/tmp/boot.img", "of=/dev/block/platform/omap/omap_hsmmc.0/by-name/boot");
+ui_print(" ");
 ui_print(" ");
 
 ui_print(">>> Done!");

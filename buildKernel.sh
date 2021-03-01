@@ -8,7 +8,7 @@ if cat /etc/issue | grep Ubuntu; then
 
 HANDLE=twistedumbrella
 TOOLCHAIN_PREFIX=~/android/android-toolchain-eabi/bin
-KERNELSPEC=~/android/uboot-tuna
+KERNELSPEC=~/android/starkissed-uboot-tuna
 BUILDSTRUCT=linux
 ANDROIDREPO=~/Dropbox/TwistedServer/Playground
 
@@ -29,21 +29,37 @@ else
 
 HANDLE=TwistedZero
 TOOLCHAIN_PREFIX=/Volumes/android/android-toolchain-eabi/bin
-KERNELSPEC=/Volumes/android/uboot-tuna
+KERNELSPEC=/Volumes/android/starkissed-uboot-tuna
 BUILDSTRUCT=darwin
 PUNCHCARD=`date "+%m-%d-%Y_%H.%M"`
 ANDROIDREPO=/Users/TwistedZero/Public/Dropbox/TwistedServer/Playground
 
 fi
 
+BOOTSCSRC=$KERNELSPEC/bootscripts
 MKBOOTIMG=$KERNELSPEC/buildImg
-BOOTSCRPT=$KERNELSPEC/bootscripts
 KERNELREPO=$ANDROIDREPO/kernels
 GOOSERVER=loungekatt@upload.goo.im:public_html
+
+if [ $1 == "y" ]; then
+
+BOOTOUTPT=$KERNELSPEC/dualPack
+BOOTSCRPT=$BOOTOUTPT/data/uboot
+
+zipfile=$HANDLE"_StarKissed-JB42X-uPack.zip"
+KENRELZIP="StarKissed-JBXXX_$PUNCHCARD-uPack.zip"
+KERNELDIR="dualPack"
+
+else
+
+BOOTOUTPT=$KERNELSPEC/dualBoot
+BOOTSCRPT=$KERNELSPEC/bootscripts
 
 zipfile=$HANDLE"_StarKissed-JB42X-uBoot.zip"
 KENRELZIP="StarKissed-JBXXX_$PUNCHCARD-uBoot.zip"
 KERNELDIR="dualBoot"
+
+fi
 
 CPU_JOB_NUM=8
 
@@ -59,11 +75,13 @@ make distclean
 make omap4_tuna_config
 make -j$CPU_JOB_NUM omap4_tuna
 
-$MKBOOTIMG/$BUILDSTRUCT/./mkbootimg --kernel u-boot.bin --ramdisk /dev/null -o $MKBOOTIMG/u-boot.img
+$MKBOOTIMG/$BUILDSTRUCT/./mkbootimg --kernel u-boot.bin --ramdisk /dev/null -o $BOOTOUTPT/u-boot.img
 
-tools/./mkimage -A arm -O linux -T script -C none -a 0x84000000 -e 0x84000000 -n android -d $BOOTSCRPT/internal.src $BOOTSCRPT/internal.src.uimg
+tools/./mkimage -A arm -O linux -T script -C none -a 0x84000000 -e 0x84000000 -n android -d $BOOTSCSRC/internal.src $BOOTSCRPT/internal.src.uimg
 
-tools/./mkimage -A arm -O linux -T script -C none -a 0x84000000 -e 0x84000000 -n android -d $BOOTSCRPT/external.src $BOOTSCRPT/external.src.uimg
+tools/./mkimage -A arm -O linux -T script -C none -a 0x84000000 -e 0x84000000 -n android -d $BOOTSCSRC/external.src $BOOTSCRPT/external.src.uimg
+
+if [ -e $BOOTOUTPT/u-boot.img ]; then
 
 cd $KERNELDIR
 rm *.zip
@@ -71,14 +89,19 @@ zip -r $zipfile *
 cd ../
 cp -R $KERNELSPEC/$KERNELDIR/$zipfile $KERNELREPO/$zipfile
 
-if [ -e $MKBOOTIMG/u-boot.img ]; then
-cp -R $MKBOOTIMG/u-boot.img $KERNELREPO/images/u-boot.img
-scp -P 2222 $MKBOOTIMG/u-boot.img $GOOSERVER/uBootRepo
+if [ $1 != "y" ]; then
+
+cp -R $BOOTOUTPT/u-boot.img $KERNELREPO/images/u-boot.img
+scp -P 2222 $BOOTOUTPT/u-boot.img $GOOSERVER/uBootRepo
 cp -R $BOOTSCRPT/internal.src.uimg $KERNELREPO/images/internal.src.uimg
-scp -P 2222 $MKBOOTIMG/internal.src.uimg $GOOSERVER/uBootRepo
+scp -P 2222 $BOOTSCRPT/internal.src.uimg $GOOSERVER/uBootRepo
 cp -R $BOOTSCRPT/external.src.uimg $KERNELREPO/images/external.src.uimg
-scp -P 2222 $MKBOOTIMG/external.src.uimg $GOOSERVER/uBootRepo
-cp -R $KERNELREPO/$zipfile $KERNELREPO/gooserver/$KENRELZIP
-scp -P 2222 $KERNELREPO/gooserver/$KENRELZIP  $GOOSERVER/starkissed
-rm -r $KERNELREPO/gooserver/*
+scp -P 2222 $BOOTSCRPT/external.src.uimg $GOOSERVER/uBootRepo
+
+fi
+
+cp -R $KERNELREPO/$zipfile ~/.goo/$KENRELZIP
+scp -P 2222 ~/.goo/$KENRELZIP  $GOOSERVER/starkissed
+rm -r ~/.goo/*
+
 fi
